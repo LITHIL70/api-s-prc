@@ -1,24 +1,19 @@
-import { useEffect, useState } from 'react'
 import UserAdd from './UserAdd'
 import UserList from './UsersList'
-import { NavLink,Routes, Route } from 'react-router-dom'
+import { NavLink, Routes, Route, Navigate } from 'react-router-dom'
 
 function App() {
-
-
- 
-
   return (
     <>
-      
-      <ul className='flex w-full bg-amber-500 justify-around'>
-        <NavLink to="/users"><li>USER's</li></NavLink>
-        <NavLink to="/addUser"><li>ADD USER'S</li></NavLink>
-      </ul>
+      <nav className="flex w-full justify-around bg-amber-500 p-4">
+        <NavLink to="/users">USERS</NavLink>
+        <NavLink to="/adduser">ADD USER</NavLink>
+      </nav>
 
       <Routes>
-        <Route path='/users' element={< UserList/>}/>
-        <Route path='/adduser' element={< UserAdd/>}/>
+        <Route path="/" element={<Navigate to="/users" replace />} />
+        <Route path="/users" element={<UserList />} />
+        <Route path="/adduser" element={<UserAdd />} />
       </Routes>
     </>
   )
