@@ -1,68 +1,42 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 
-export default function UserAdd() {
-  const url = "http://localhost:3000/users/"
-  const navigate = useNavigate()
-  const [name, setName] = useState("")
-  const [age, setAge] = useState("")
+export default function UserAdd(){
 
-  async function addUser() {
-    const response = await fetch(url, {
-      method: "POST",
-      body: JSON.stringify({ name, age }),
-    })
+    let url="http://localhost:3000/users"
 
-    const data = await response.json()
+    let navigate = useNavigate()
 
-    if (data) {
-      alert("user added")
-      navigate("/users")
-    } else {
-      alert("user not added")
+    let[name,setName]=useState()
+    let[age,setAge]=useState()
+
+    async function addUser() {
+        let response = await fetch(url,{
+            method:"POST",
+            body:JSON.stringify({name, age})
+        });
+
+        response = await response.json()
+
+        if(response){
+            alert("user added")
+            navigate("/users")
+        }else{
+            alert("users not added")
+        }
+
     }
-  }
+    return(
+        <>
+        <div>
+            <h1>ADD USERS</h1>
 
-  return (
-    <main className="flex min-h-[calc(100vh-64px)] items-center justify-center bg-slate-100 px-4 py-10">
-      <section className="w-full max-w-md rounded-2xl bg-white p-8 shadow-xl ring-1 ring-slate-200">
-        <h1 className="mb-2 text-center text-3xl font-bold text-slate-800">ADD USERS</h1>
-        <p className="mb-8 text-center text-sm text-slate-500">Enter the user details below</p>
+            <input className="m-2 outline-1 p-0.5" re type="text" placeholder="ENTER NAME" onChange={(event)=>setName(event.target.value)}/><br></br>
+            <input className="m-2 outline-1 p-0.5" required type="text" placeholder="ENTER AGE"  onChange={(event)=>setAge(event.target.value)}/><br></br>
 
-        <div className="space-y-5">
-          <div>
-            <label htmlFor="name" className="mb-2 block text-sm font-semibold text-slate-700">Name</label>
-            <input
-              id="name"
-              className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
-              type="text"
-              placeholder="Enter Name"
-              value={name}
-              onChange={(event) => setName(event.target.value)}
-            />
-          </div>
-
-          <div>
-            <label htmlFor="age" className="mb-2 block text-sm font-semibold text-slate-700">Age</label>
-            <input
-              id="age"
-              className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
-              type="text"
-              placeholder="Enter Age"
-              value={age}
-              onChange={(event) => setAge(event.target.value)}
-            />
-          </div>
-
-          <button
-            className="w-full rounded-lg bg-blue-600 px-4 py-3 font-semibold text-white shadow-md transition hover:bg-blue-700 active:scale-[0.99] focus:outline-none focus:ring-4 focus:ring-blue-200"
-            onClick={addUser}
-            type="button"
-          >
-            Add User
-          </button>
+            <button className="m-4 w-30 bg-red-600" onClick={addUser}>Conform</button>
+            
         </div>
-      </section>
-    </main>
-  )
+        </>
+    )
 }
