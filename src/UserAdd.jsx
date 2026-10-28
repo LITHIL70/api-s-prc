@@ -1,54 +1,76 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-
-const url = 'http://localhost:3000/users'
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 export default function UserAdd() {
+  const url = "http://localhost:3000/users/"
   const navigate = useNavigate()
-  const [name, setName] = useState('')
-  const [age, setAge] = useState('')
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [error, setError] = useState('')
+  const [name, setName] = useState("")
+  const [age, setAge] = useState("")
 
-  async function addUser(event) {
-    event.preventDefault()
-    setError('')
-
-    if (!name.trim() || age === '' || Number(age) < 0) {
-      setError('Enter a name and a valid age.')
-      return
-    }
-
-    setIsSubmitting(true)
+  async function addUser() {
     try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: name.trim(), age: Number(age) }),
+      let response = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, age }),
       })
-      if (!response.ok) throw new Error(`Request failed (${response.status})`)
-      alert('User added successfully')
-      navigate('/users')
-    } catch (err) {
-      setError(`Could not add user. Make sure your API is running at ${url}. ${err.message}`)
-    } finally {
-      setIsSubmitting(false)
+
+      response = await response.json()
+
+      if (response) {
+        alert("user added")
+        navigate("/users")
+      } else {
+        alert("user not added")
+      }
+    } catch (error) {
+      alert("Could not add user. Check that the API server is running.")
+      console.error(error)
     }
   }
 
   return (
-    <div className="mx-auto max-w-md p-6">
-      <h1 className="mb-4 text-2xl font-bold">Add User</h1>
-      <form onSubmit={addUser}>
-        <label className="mb-1 block" htmlFor="name">Name</label>
-        <input id="name" className="mb-3 w-full rounded border p-2" type="text" placeholder="Enter name" value={name} onChange={(event) => setName(event.target.value)} required />
-        <label className="mb-1 block" htmlFor="age">Age</label>
-        <input id="age" className="mb-4 w-full rounded border p-2" type="number" min="0" placeholder="Enter age" value={age} onChange={(event) => setAge(event.target.value)} required />
-        <button className="rounded bg-amber-950 px-4 py-2 text-white disabled:opacity-50" type="submit" disabled={isSubmitting}>
-          {isSubmitting ? 'Saving...' : 'Confirm'}
-        </button>
-        {error && <p className="mt-3 text-red-600" role="alert">{error}</p>}
-      </form>
-    </div>
+    <main className="flex min-h-[calc(100vh-64px)] items-center justify-center bg-slate-100 px-4 py-10">
+      <section className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg ring-1 ring-slate-200">
+        <div className="mb-6 text-center">
+          <h1 className="text-3xl font-bold tracking-tight text-slate-800">Add User</h1>
+          <p className="mt-2 text-sm text-slate-500">Enter the user's details below.</p>
+        </div>
+
+        <div className="space-y-5">
+          <div>
+            <label htmlFor="name" className="mb-2 block text-sm font-semibold text-slate-700">Name</label>
+            <input
+              id="name"
+              className="w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              type="text"
+              placeholder="Enter name"
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="age" className="mb-2 block text-sm font-semibold text-slate-700">Age</label>
+            <input
+              id="age"
+              className="w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              type="text"
+              placeholder="Enter age"
+              value={age}
+              onChange={(event) => setAge(event.target.value)}
+            />
+          </div>
+
+          <button
+            className="w-full rounded-lg bg-blue-600 px-4 py-3 font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
+            onClick={addUser}
+            type="button"
+          >
+            Add User
+          </button>
+        </div>
+      </section>
+    </main>
   )
 }
