@@ -1,5 +1,7 @@
 
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
 
 export default function UserList() {
   const [users, setUsers] = useState([])
@@ -7,12 +9,22 @@ export default function UserList() {
 
   let url = 'http://localhost:3000/users/'
 
-  async function getUsers() {
-    const response = await fetch(url)
-    const data = await response.json()
+  let navigate=useNavigate()
 
-    setUsers(data)
+  async function getUsers() {
+    try{
+      let response = await axios.get(url)
+      setUsers(response.data)
     setLoading(false)
+
+    }catch(error){
+      alert(error)
+    }
+    // const response = await fetch(url)
+    // const data = await response.json()
+
+    // setUsers(data)
+    // setLoading(false)
   }
 
   useEffect(() => {
@@ -21,19 +33,32 @@ export default function UserList() {
   }, [])
 
   async function deletUser(id) {
-    console.log("clicked " + id)
+    // console.log("clicked " + id)
 
-    const response = await fetch(url + id, {
-      method: "DELETE",
-    })
-
-    if (response.ok) {
-      alert("user deleted")
+    try{
+      await axios.delete(url + id)
+      alert(" data deleted sucessfully")
       getUsers()
-    } else {
-      alert("something went wrong..")
+
+    }catch(error){
+      alert(error)
     }
+
+    // const response = await fetch(url + id, {
+    //   method: "DELETE",
+    // })
+
+    // if (response.ok) {
+    //   alert("user deleted")
+    //   getUsers()
+    // } else {
+    //   alert("something went wrong..")
+    // }
   }
+
+    function editUser(id){
+      navigate("/edit/"+id)
+    }
 
   return (
     <>
@@ -65,6 +90,7 @@ export default function UserList() {
                   Delet
                 </button>
               </li>
+              <li><button onClick={()=>editUser(user.id)} className="border bg-green-500 m-2 p-2">Edit</button></li><br />
             </ul>
           )) :
             <h1>Loading....</h1>

@@ -1,6 +1,7 @@
 import UserAdd from './UserAdd'
 import UserList from './UsersList'
 import { NavLink, Routes, Route, Navigate } from 'react-router-dom'
+import UserUpdate from './UserUpdate'
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/" element={<Navigate to="/users" replace />} />
         <Route path="/users" element={<UserList />} />
         <Route path="/adduser" element={<UserAdd />} />
+        <Route path="/edit/:id" element={< UserUpdate/>} />
       </Routes>
     </>
   )
